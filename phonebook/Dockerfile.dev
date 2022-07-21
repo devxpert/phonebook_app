@@ -1,0 +1,18 @@
+# get the base node image
+FROM node:18.6.0-alpine
+
+# set the working dir for container
+WORKDIR /usr/src/app/frontend
+
+# copy the json file firs
+
+COPY package.json ./
+
+# install npm dependencies
+RUN npm install
+
+# copy other project files
+COPY . .
+
+# build the folder
+CMD [ "npm", "run", "start" ]

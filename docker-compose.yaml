@@ -1,0 +1,42 @@
+version: '3'
+services: 
+      frontend:
+        build: 
+            context: ./phonebook/
+            dockerfile: Dockerfile.dev
+        stdin_open: true
+        command: npm run start
+        container_name: phonebook
+        ports:
+            - "3000:3000"        
+        volumes: 
+            - ./:/phonebook
+            - /phonebook/node_modules
+
+      backend:
+          build: 
+              context: ./backend/
+              dockerfile: Dockerfile
+          container_name: backend
+          ports:
+              - "8080:8080"        
+          volumes: 
+              - ./:/backend
+          depends_on:
+            - database
+
+      database:
+        image: postgres:14.0-alpine
+        volumes:
+          - postgres_data:/var/lib/postgresql/data/
+        environment:
+          - POSTGRES_USER=postgresql
+          - POSTGRES_PASSWORD=postgresql
+          - POSTGRES_DB=postgresql
+        restart: always
+        ports:
+          - 5432:5432
+
+volumes:
+  postgres_data:
+   
